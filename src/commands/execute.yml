@@ -1,0 +1,58 @@
+---
+description: >
+  Execute Molecule
+
+parameters:
+  aws-ami-name:
+    description: AWS AMI name
+    type: string
+  aws-ami-owner-id:
+    description: AWS AMI owner ID
+    type: string
+  aws-resource-name:
+    description: Sets the value to create a unique resource in AWS. The preferred naming convention is 'molecule-<git-repo>-<os>', etc.
+    type: string
+  aws-vpc-subnet-id:
+    description: AWS VPC Subnet ID
+    type: string
+  molecule-scenario-name:
+    default: default
+    description: Molecule scenario name
+    type: string
+  molecule-verbosity:
+    default: 0
+    description: Molecule verbosity
+    type: integer
+  circleci-timeout:
+    default: '600'
+    description: Customize CircleCI timeout. The default timeout is set to 600 seconds (10 minutes), but if you wish to set a longer timeout, change this value.
+    type: string
+
+steps:
+  - run:
+      name: Show Molecule version
+      command: |
+        molecule --version
+  - run:
+      name: Show Ansible version
+      command: |
+        ansible --version
+        ansible-community --version
+  - run:
+      name: Set Environment variables for making sure Molecule would create unique AWS resources
+      command: <<include(scripts/set-environment-variables.sh)>>
+      environment:
+        PARAM_AWS_RESOURCE_NAME: << parameters.aws-resource-name >>
+  - run:
+      name: Test with Molecule
+      command: <<include(scripts/molecule.sh)>>
+      environment:
+        ANSIBLE_FORCE_COLOR: '1'
+        AMI_NAME: << parameters.aws-ami-name >>
+        AMI_OWNER_ID: << parameters.aws-ami-owner-id >>
+        MOLECULE_SCENARIO_NAME: << parameters.molecule-scenario-name >>
+        MOLECULE_VERBOSITY: << parameters.molecule-verbosity >>
+        VPC_SUBNET_ID: << parameters.aws-vpc-subnet-id >>
+        PY_COLORS: '1'
+        TZ: 'Asia/Tokyo'
+      no_output_timeout: << parameters.circleci-timeout >>

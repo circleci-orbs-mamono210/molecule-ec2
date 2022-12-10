@@ -1,0 +1,8 @@
+---
+description: CircleCI executor Molecule
+docker:
+  - image: '<<parameters.image>>'
+parameters:
+  image:
+    default: ghcr.io/docker-images-mamono210/circleci-executors_molecule/molecule:ec2
+    type: string

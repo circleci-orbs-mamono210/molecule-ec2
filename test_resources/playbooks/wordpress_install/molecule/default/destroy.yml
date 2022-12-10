@@ -1,0 +1,12 @@
+---
+- name: Destroy
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Execute
+      ansible.builtin.include_role:
+        name: mamono210.molecule_test_ec2
+      vars:
+        resource_state: 'absent'

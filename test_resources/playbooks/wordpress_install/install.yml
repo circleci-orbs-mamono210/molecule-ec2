@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: true
+
+  roles:
+    - role: mamono210.epel
+    - role: mamono210.remi
+    - role: mamono210.httpd_install
+    - role: mamono210.php
+    - role: mamono210.wp_cli
+    - role: mamono210.mariadb_install
+    - role: mamono210.mariadb_create_db
+    - role: mamono210.wordpress_install

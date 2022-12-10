@@ -1,0 +1,21 @@
+---
+description: Execute Molecule
+usage:
+  version: 2.1
+  orbs:
+    molecule-ec2: orbss/molecule-ec2@x.y.z
+  jobs:
+    molecule:
+      executor: molecule-ec2/defaut
+      steps:
+        - checkout
+        - molecule-ec2/execute:
+            aws-ami-name: "centos-stream8-1*"
+            aws-ami-owner-id: "abclmnstuxyz"
+            aws-resource-name: "circleci-orbs-molecule-ec2"
+            aws-vpc-subnet-id: "subnet-abclmnstuxyz"
+            circleci-timeout: "15m"
+  workflows:
+    use-my-orb:
+      jobs:
+        - molecule

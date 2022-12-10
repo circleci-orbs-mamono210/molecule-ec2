@@ -1,0 +1,24 @@
+---
+- name: Verify
+  become: true
+  hosts: all
+
+  tasks:
+    - name: Check if WordPress is running
+      ansible.builtin.uri:
+        url: http://localhost/wordpress
+        return_content: yes
+      register: wordpress_installed
+
+    - name: Show contents
+      ansible.builtin.debug:
+        msg: "{{ wordpress_installed.content.split('\n') }}"
+
+    - name: Check OS version
+      ansible.builtin.command: cat /etc/redhat-release
+      register: os_version
+      changed_when: false
+
+    - name: Show OS version
+      ansible.builtin.debug:
+        var: os_version

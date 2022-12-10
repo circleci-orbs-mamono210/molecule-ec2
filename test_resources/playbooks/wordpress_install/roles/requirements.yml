@@ -1,0 +1,18 @@
+---
+roles:
+  - name: mamono210.epel
+    src: https://github.com/ansible-roles-mamono210/epel.git
+  - name: mamono210.httpd_install
+    src: https://github.com/ansible-roles-mamono210/httpd_install.git
+  - name: mamono210.mariadb_create_db
+    src: https://github.com/ansible-roles-mamono210/mariadb_create_db.git
+  - name: mamono210.mariadb_install
+    src: https://github.com/ansible-roles-mamono210/mariadb_install.git
+  - name: mamono210.php
+    src: https://github.com/ansible-roles-mamono210/php.git
+  - name: mamono210.remi
+    src: https://github.com/ansible-roles-mamono210/remi.git
+  - name: mamono210.wordpress_install
+    src: https://github.com/ansible-roles-mamono210/wordpress_install.git
+  - name: mamono210.wp_cli
+    src: https://github.com/ansible-roles-mamono210/wp_cli.git

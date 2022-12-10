@@ -1,0 +1,8 @@
+---
+version: 2.1
+
+description: >
+  This is an Orb to test Ansible Playbook and Role against EC2 in Molecule.
+
+display:
+  source_url: "https://github.com/circleci-orbs-mamono210/molecule-ec2"
