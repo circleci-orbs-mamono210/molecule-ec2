@@ -6,3 +6,8 @@ parameters:
   image:
     default: ghcr.io/docker-images-mamono210/circleci-executors_molecule/molecule:ec2
     type: string
+  resource_class:
+    default: medium
+    enum: ["small", "medium", "medium+", "large"]
+    type: enum
+resource_class: '<<parameters.resource_class>>'

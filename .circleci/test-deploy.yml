@@ -16,7 +16,7 @@ jobs:
       - aws-cli/setup:
           profile-name: default
           role-arn: ${AWS_ROLE_ARN}
-          role-session-name: circleci-orbs-molecule-ec2
+          role-session-name: circleci-orbs-molecule-ec2-playbook-test
           session-duration: '3600'
       - checkout
       - run:
@@ -29,7 +29,31 @@ jobs:
       - molecule-ec2/execute:
           aws-ami-name: "centos-stream8-1*"
           aws-ami-owner-id: "808683561341" # 環境変数やcontextでは値を渡せない
-          aws-resource-name: "circleci-orbs-molecule-ec2"
+          aws-resource-name: "circleci-orbs-molecule-ec2-playbook-test"
+          aws-vpc-subnet-id: "subnet-022a704b3061b8b39" # 環境変数やcontextでは値を渡せない
+          circleci-timeout: "15m"
+  resource-class-test:
+    executor:
+      name: molecule-ec2/default
+      resource_class: medium+
+    steps:
+      - aws-cli/setup:
+          profile-name: default
+          role-arn: ${AWS_ROLE_ARN}
+          role-session-name: circleci-orbs-molecule-ec2-resource-class-test
+          session-duration: '3600'
+      - checkout
+      - run:
+          name: Prepare test resources
+          command: |
+            mv test_resources/playbooks/wordpress_install/group_vars .
+            mv test_resources/playbooks/wordpress_install/molecule .
+            mv test_resources/playbooks/wordpress_install/roles .
+            mv test_resources/playbooks/wordpress_install/install.yml .
+      - molecule-ec2/execute:
+          aws-ami-name: "centos-stream8-1*"
+          aws-ami-owner-id: "808683561341" # 環境変数やcontextでは値を渡せない
+          aws-resource-name: "circleci-orbs-molecule-ec2-resouce-class-test"
           aws-vpc-subnet-id: "subnet-022a704b3061b8b39" # 環境変数やcontextでは値を渡せない
           circleci-timeout: "15m"
 
@@ -37,6 +61,10 @@ workflows:
   test-deploy:
     jobs:
       - playbook-test:
+          context:
+            - AWS_OPENID_CONNECT_TOKENS
+          filters: *filters
+      - resource-class-test:
           context:
             - AWS_OPENID_CONNECT_TOKENS
           filters: *filters
@@ -49,6 +77,7 @@ workflows:
           requires:
             - orb-tools/pack
             - playbook-test
+            - resource-class-test
           context: <publishing-context>
           filters:
             branches:
