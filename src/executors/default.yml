@@ -4,7 +4,7 @@ docker:
   - image: '<<parameters.image>>'
 parameters:
   image:
-    default: ghcr.io/docker-images-mamono210/circleci-executors_molecule/molecule:ec2
+    default: ghcr.io/docker-images-mamono210/circleci-executors/molecule-ec2:latest
     type: string
   resource_class:
     default: medium
