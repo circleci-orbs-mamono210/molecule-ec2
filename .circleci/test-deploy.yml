@@ -27,6 +27,7 @@ jobs:
             mv test_resources/playbooks/wordpress_install/roles .
             mv test_resources/playbooks/wordpress_install/install.yml .
       - molecule-ec2/execute:
+          ansible-user: "centos"
           aws-ami-name: "centos-stream8-1*"
           aws-ami-owner-id: "808683561341" # 環境変数やcontextでは値を渡せない
           aws-resource-name: "circleci-orbs-molecule-ec2-playbook-test"
@@ -51,6 +52,7 @@ jobs:
             mv test_resources/playbooks/wordpress_install/roles .
             mv test_resources/playbooks/wordpress_install/install.yml .
       - molecule-ec2/execute:
+          ansible-user: "centos"
           aws-ami-name: "centos-stream8-1*"
           aws-ami-owner-id: "808683561341" # 環境変数やcontextでは値を渡せない
           aws-resource-name: "circleci-orbs-molecule-ec2-resouce-class-test"

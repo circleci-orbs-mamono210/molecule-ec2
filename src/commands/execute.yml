@@ -3,17 +3,21 @@ description: >
   Execute Molecule
 
 parameters:
+  ansible-user:
+    default: 'ansible'
+    description: The user account that Ansible uses to execute tasks. Since this value is passed by an environment variable, it may not affect the processing depending on how it is written in 'molecule.yml' file.
+    type: string
   aws-ami-name:
-    description: AWS AMI name
+    description: AWS AMI name. Since this value is passed by an environment variable, it may not affect the processing depending on how it is written in 'molecule.yml' file.
     type: string
   aws-ami-owner-id:
-    description: AWS AMI owner ID
+    description: AWS AMI owner ID. Since this value is passed by an environment variable, it may not affect the processing depending on how it is written in 'molecule.yml' file.
     type: string
   aws-resource-name:
     description: Sets the value to create a unique resource in AWS. The preferred naming convention is 'molecule-<git-repo>-<os>', etc.
     type: string
   aws-vpc-subnet-id:
-    description: AWS VPC Subnet ID
+    description: AWS VPC Subnet ID. Since this value is passed by an environment variable, it may not affect the processing depending on how it is written in 'molecule.yml' file.
     type: string
   molecule-scenario-name:
     default: default
@@ -48,6 +52,7 @@ steps:
       command: <<include(scripts/molecule.sh)>>
       environment:
         ANSIBLE_FORCE_COLOR: '1'
+        ANSIBLE_USER: << parameters.ansible-user >>
         AMI_NAME: << parameters.aws-ami-name >>
         AMI_OWNER_ID: << parameters.aws-ami-owner-id >>
         MOLECULE_SCENARIO_NAME: << parameters.molecule-scenario-name >>
