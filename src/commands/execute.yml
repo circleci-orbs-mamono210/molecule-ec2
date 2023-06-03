@@ -7,10 +7,16 @@ parameters:
     default: 'ansible'
     description: The user account that Ansible uses to execute tasks. Since this value is passed by an environment variable, it may not affect the processing depending on how it is written in 'molecule.yml' file.
     type: string
+  aws-ami-id:
+    default: ''
+    description: AWS AMI ID. Since this value is passed by an environment variable, it may not affect the processing depending on how it is written in 'molecule.yml' file.
+    type: string
   aws-ami-name:
+    default: ''
     description: AWS AMI name. Since this value is passed by an environment variable, it may not affect the processing depending on how it is written in 'molecule.yml' file.
     type: string
   aws-ami-owner-id:
+    default: ''
     description: AWS AMI owner ID. Since this value is passed by an environment variable, it may not affect the processing depending on how it is written in 'molecule.yml' file.
     type: string
   aws-resource-name:
@@ -53,6 +59,7 @@ steps:
       environment:
         ANSIBLE_FORCE_COLOR: '1'
         ANSIBLE_USER: << parameters.ansible-user >>
+        AMI_ID: << parameters.aws-ami-id >>
         AMI_NAME: << parameters.aws-ami-name >>
         AMI_OWNER_ID: << parameters.aws-ami-owner-id >>
         MOLECULE_SCENARIO_NAME: << parameters.molecule-scenario-name >>

@@ -1,0 +1,11 @@
+---
+- name: Update installed packages
+  ansible.builtin.package:
+    name: '*'
+    state: latest
+  register: is_updated
+
+- name: Reboot the system
+  ansible.builtin.include_tasks:
+    file: ../handlers/main.yml
+  when: is_updated.changed

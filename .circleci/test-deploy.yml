@@ -10,6 +10,29 @@ filters: &filters
     only: /.*/
 
 jobs:
+  ami-id-test:
+    executor: molecule-ec2/default
+    working_directory: ~/centos_update
+    steps:
+      - aws-cli/setup:
+          profile-name: default
+          role-arn: ${AWS_ROLE_ARN}
+          role-session-name: circleci-orbs-molecule-ec2-playbook-test
+          session-duration: '3600'
+      - checkout
+      - run:
+          name: Prepare test resources
+          command: |
+            mv test_resources/roles/centos_update/defaults .
+            mv test_resources/roles/centos_update/handlers .
+            mv test_resources/roles/centos_update/molecule .
+            mv test_resources/roles/centos_update/tasks .
+      - molecule-ec2/execute:
+          ansible-user: "ec2-user"
+          aws-ami-id: "ami-0240506e88917a482" # 環境変数やcontextでは値を渡せない
+          aws-resource-name: "circleci-orbs-molecule-ec2-ami-id-test"
+          aws-vpc-subnet-id: "subnet-022a704b3061b8b39" # 環境変数やcontextでは値を渡せない
+          circleci-timeout: "15m"
   playbook-test:
     executor: molecule-ec2/default
     steps:
@@ -62,6 +85,10 @@ jobs:
 workflows:
   test-deploy:
     jobs:
+      - ami-id-test:
+          context:
+            - AWS_OPENID_CONNECT_TOKENS
+          filters: *filters
       - playbook-test:
           context:
             - AWS_OPENID_CONNECT_TOKENS
