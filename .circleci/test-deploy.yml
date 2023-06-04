@@ -29,7 +29,8 @@ jobs:
             mv test_resources/roles/centos_update/tasks .
       - molecule-ec2/execute:
           ansible-user: "ec2-user"
-          aws-ami-id: "ami-0240506e88917a482" # 環境変数やcontextでは値を渡せない
+          aws-ami-id: "ami-01476cac56c95883c" # CentOS Stream 9 aarch64 ap-northeast-1
+          aws-instance-type: "t4g.medium"
           aws-resource-name: "circleci-orbs-molecule-ec2-ami-id-test"
           aws-vpc-subnet-id: "subnet-022a704b3061b8b39" # 環境変数やcontextでは値を渡せない
           circleci-timeout: "15m"

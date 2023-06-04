@@ -19,6 +19,10 @@ parameters:
     default: ''
     description: AWS AMI owner ID. Since this value is passed by an environment variable, it may not affect the processing depending on how it is written in 'molecule.yml' file.
     type: string
+  aws-instance-type:
+    default: ''
+    description: AWS EC2 instance type. Since this value is passed by an environment variable, it may not affect the processing depending on how it is written in 'molecule.yml' file.
+    type: string
   aws-resource-name:
     description: Sets the value to create a unique resource in AWS. The preferred naming convention is 'molecule-<git-repo>-<os>', etc.
     type: string
@@ -62,6 +66,7 @@ steps:
         AMI_ID: << parameters.aws-ami-id >>
         AMI_NAME: << parameters.aws-ami-name >>
         AMI_OWNER_ID: << parameters.aws-ami-owner-id >>
+        INSTANCE_TYPE: << parameters.aws-instance-type >>
         MOLECULE_SCENARIO_NAME: << parameters.molecule-scenario-name >>
         MOLECULE_VERBOSITY: << parameters.molecule-verbosity >>
         VPC_SUBNET_ID: << parameters.aws-vpc-subnet-id >>
