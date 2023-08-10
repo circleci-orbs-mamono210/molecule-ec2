@@ -1,0 +1,2 @@
+circleci orb pack src/ > orb.yml
+circleci orb publish orb.yml orbss/molecule-ec2@x.x.x --token `cat ~/.circleci/token.txt`
