@@ -23,10 +23,12 @@ jobs:
       - run:
           name: Prepare test resources
           command: |
-            mv test_resources/roles/centos_update/defaults .
-            mv test_resources/roles/centos_update/handlers .
-            mv test_resources/roles/centos_update/molecule .
-            mv test_resources/roles/centos_update/tasks .
+            git clone https://github.com/ansible-roles-mamono210/centos_update.git
+            cd centos_update
+            mv defaults ..
+            mv handlers ..
+            mv molecule ..
+            mv tasks ..
       - molecule-ec2/execute:
           ansible-user: "ec2-user"
           aws-ami-id: "ami-01476cac56c95883c" # CentOS Stream 9 aarch64 ap-northeast-1
@@ -46,14 +48,17 @@ jobs:
       - run:
           name: Prepare test resources
           command: |
-            mv test_resources/playbooks/wordpress_install/group_vars .
-            mv test_resources/playbooks/wordpress_install/molecule .
-            mv test_resources/playbooks/wordpress_install/roles .
-            mv test_resources/playbooks/wordpress_install/install.yml .
+            git clone https://github.com/ansible-playbooks-mamono210/wordpress_install.git
+            cd wordpress_install
+            mv group_vars ..
+            mv molecule ..
+            mv roles ..
+            mv install.yml ..
       - molecule-ec2/execute:
           ansible-user: "centos"
           aws-ami-name: "centos-stream8-1*"
           aws-ami-owner-id: "808683561341" # 環境変数やcontextでは値を渡せない
+          aws-instance-type: "t2.medium"
           aws-resource-name: "circleci-orbs-molecule-ec2-playbook-test"
           aws-vpc-subnet-id: "subnet-022a704b3061b8b39" # 環境変数やcontextでは値を渡せない
           circleci-timeout: "15m"
@@ -71,14 +76,17 @@ jobs:
       - run:
           name: Prepare test resources
           command: |
-            mv test_resources/playbooks/wordpress_install/group_vars .
-            mv test_resources/playbooks/wordpress_install/molecule .
-            mv test_resources/playbooks/wordpress_install/roles .
-            mv test_resources/playbooks/wordpress_install/install.yml .
+            git clone https://github.com/ansible-playbooks-mamono210/wordpress_install.git
+            cd wordpress_install
+            mv group_vars ..
+            mv molecule ..
+            mv roles ..
+            mv install.yml ..
       - molecule-ec2/execute:
           ansible-user: "centos"
           aws-ami-name: "centos-stream8-1*"
           aws-ami-owner-id: "808683561341" # 環境変数やcontextでは値を渡せない
+          aws-instance-type: "t2.medium"
           aws-resource-name: "circleci-orbs-molecule-ec2-resouce-class-test"
           aws-vpc-subnet-id: "subnet-022a704b3061b8b39" # 環境変数やcontextでは値を渡せない
           circleci-timeout: "15m"
