@@ -48,15 +48,15 @@ jobs:
       - run:
           name: Prepare test resources
           command: |
-            git clone https://github.com/ansible-playbooks-mamono210/wordpress_install.git
-            cd wordpress_install
+            git clone https://github.com/ansible-playbooks-mamono210/vnc-server.git
+            cd vnc-server
             mv group_vars ..
             mv molecule ..
             mv roles ..
             mv install.yml ..
       - molecule-ec2/execute:
           ansible-user: "centos"
-          aws-ami-name: "centos-stream8-1*"
+          aws-ami-name: "centos7-1*"
           aws-ami-owner-id: "808683561341" # 環境変数やcontextでは値を渡せない
           aws-instance-type: "t2.medium"
           aws-resource-name: "circleci-orbs-molecule-ec2-playbook-test"
@@ -76,15 +76,15 @@ jobs:
       - run:
           name: Prepare test resources
           command: |
-            git clone https://github.com/ansible-playbooks-mamono210/wordpress_install.git
-            cd wordpress_install
+            git clone https://github.com/ansible-playbooks-mamono210/vnc-server.git
+            cd vnc-server
             mv group_vars ..
             mv molecule ..
             mv roles ..
             mv install.yml ..
       - molecule-ec2/execute:
           ansible-user: "centos"
-          aws-ami-name: "centos-stream8-1*"
+          aws-ami-name: "centos7-1*"
           aws-ami-owner-id: "808683561341" # 環境変数やcontextでは値を渡せない
           aws-instance-type: "t2.medium"
           aws-resource-name: "circleci-orbs-molecule-ec2-resouce-class-test"
