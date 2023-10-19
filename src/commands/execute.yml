@@ -3,6 +3,10 @@ description: >
   Execute Molecule
 
 parameters:
+  ansible-timeout:
+    default: '300'
+    description: The default timeout for Ansible connection plugins to use.
+    type: string
   ansible-user:
     default: 'ansible'
     description: The user account that Ansible uses to execute tasks. Since this value is passed by an environment variable, it may not affect the processing depending on how it is written in 'molecule.yml' file.
@@ -62,6 +66,7 @@ steps:
       command: <<include(scripts/molecule.sh)>>
       environment:
         ANSIBLE_FORCE_COLOR: '1'
+        ANSIBLE_TIMEOUT: << parameters.ansible-timeout >>
         ANSIBLE_USER: << parameters.ansible-user >>
         AMI_ID: << parameters.aws-ami-id >>
         AMI_NAME: << parameters.aws-ami-name >>
