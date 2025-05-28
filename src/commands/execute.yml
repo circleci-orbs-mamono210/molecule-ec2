@@ -51,6 +51,8 @@ steps:
       name: Show Molecule version
       command: |
         molecule --version
+  - run:
+      name: Show Molecule release date
         <<include(scripts/molecule-release-date.sh)>>
   - run:
       name: Show Ansible version
