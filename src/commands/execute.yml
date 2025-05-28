@@ -50,54 +50,8 @@ steps:
   - run:
       name: Show Molecule version
       command: |
-        #!/bin/bash -e
-        # Enforce error handling and exit on any error
-
-        get_release_date() {
-            local pkg="$1"
-            local ver="$2"
-
-            # Check for missing arguments
-            if [ -z "$pkg" ] || [ -z "$ver" ]; then
-                echo "Error: Package name and version are required" >&2
-                exit 1
-            fi
-
-            # Ensure dependencies are available
-            command -v curl >/dev/null 2>&1 || { echo "Error: curl is required" >&2; exit 1; }
-            command -v jq >/dev/null 2>&1 || { echo "Error: jq is required" >&2; exit 1; }
-            command -v sort >/dev/null 2>&1 || { echo "Error: sort is required" >&2; exit 1; }
-            command -v tail >/dev/null 2>&1 || { echo "Error: tail is required" >&2; exit 1; }
-
-            # Fetch and process release date
-            curl --silent --fail "https://pypi.org/pypi/${pkg}/json" \
-                | jq -r --arg V "$ver" '.releases[$V][] | .upload_time_iso_8601' \
-                | sort \
-                | tail -n1
-        }
-
-        # Check if molecule is installed
-        if ! command -v molecule >/dev/null 2>&1; then
-            echo "Error: molecule is not installed" >&2
-            exit 1
-        fi
-
-        # Get molecule version
-        MOL_VER=$(molecule --version 2>/dev/null | awk '{print $2}')
-        if [ -z "$MOL_VER" ]; then
-            echo "Error: Could not determine molecule version" >&2
-            exit 1
-        fi
-
-        # Get release date
-        MOL_DATE=$(get_release_date molecule "$MOL_VER")
-        if [ -z "$MOL_DATE" ]; then
-            echo "Error: Could not retrieve release date for molecule $MOL_VER" >&2
-            exit 1
-        fi
-
-        # Output result (avoiding non-ASCII characters for portability)
-        echo "molecule $MOL_VER released at $MOL_DATE"
+        molecule --version
+        <<include(scripts/molecule-release-date.sh)>>
   - run:
       name: Show Ansible version
       command: |
