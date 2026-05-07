@@ -65,16 +65,30 @@ jobs:
       - run:
           name: Wait for Selenium sidecar
           command: |
-            for i in $(seq 1 60); do
-              if curl -fsS http://selenium:4444/status | grep -q '"ready":true'; then
-                echo "Selenium is ready"
-                exit 0
-              fi
+            set -euo pipefail
+
+            HOSTS=("selenium" "localhost")
+            PATHS=("/wd/hub/status" "/status")
+
+            for i in $(seq 1 90); do
+              for h in "${HOSTS[@]}"; do
+                for p in "${PATHS[@]}"; do
+                  if curl -fsS "http://${h}:4444${p}" | grep -Eiq '"ready"\s*:\s*true'; then
+                    echo "Selenium is ready at http://${h}:4444${p}"
+                    exit 0
+                  fi
+                done
+              done
               sleep 2
             done
-            echo "Selenium did not become ready"
-            curl -v http://selenium:4444/status || true
-            exit 1
+
+            echo "Selenium did not become ready" >&2
+            for h in "${HOSTS[@]}"; do
+              for p in "${PATHS[@]}"; do
+                echo "[DEBUG] curl http://${h}:4444${p}" >&2
+                curl -v "http://${h}:4444${p}" || true
+              done
+            done
       - molecule-ec2/execute:
           ansible-user: "ec2-user"
           aws-ami-name: "centos-stream9-1*"
