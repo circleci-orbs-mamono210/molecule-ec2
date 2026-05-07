@@ -37,9 +37,11 @@ jobs:
           aws-vpc-subnet-id: "subnet-022a704b3061b8b39" # 環境変数やcontextでは値を渡せない
           circleci-timeout: "15m"
   playbook-test:
-    machine:
-      image: ubuntu-2204:2023.10.1
-      resource_class: medium
+    docker:
+      - image: ghcr.io/docker-images-mamono210/circleci-executors/molecule-default:26.3.0-py3.14-ans13.4.0
+      - image: selenium/standalone-firefox:latest
+        name: selenium
+    resource_class: small
     steps:
       - aws-cli/setup:
           profile-name: default
@@ -57,20 +59,29 @@ jobs:
             mv roles ..
             mv install.yml ..
       - run:
-          name: Install Molecule and dependencies
-          command: |
-            pip3 install -r molecule/requirements.txt
-      - run:
           name: Install required Ansible roles
           command: |
             ansible-galaxy install -r molecule/default/requirements.yml
+      - run:
+          name: Wait for Selenium sidecar
+          command: |
+            for i in $(seq 1 60); do
+              if curl -fsS http://selenium:4444/status | grep -q '"ready":true'; then
+                echo "Selenium is ready"
+                exit 0
+              fi
+              sleep 2
+            done
+            echo "Selenium did not become ready"
+            curl -v http://selenium:4444/status || true
+            exit 1
       - molecule-ec2/execute:
           ansible-user: "ec2-user"
           aws-ami-name: "centos-stream9-1*"
-          aws-ami-owner-id: "808683561341" # 環境変数やcontextでは値を渡せない
+          aws-ami-owner-id: "808683561341"
           aws-instance-type: "t2.medium"
           aws-resource-name: "circleci-orbs-molecule-ec2-playbook-test"
-          aws-vpc-subnet-id: "subnet-022a704b3061b8b39" # 環境変数やcontextでは値を渡せない
+          aws-vpc-subnet-id: "subnet-022a704b3061b8b39"
           circleci-timeout: "15m"
       - store_artifacts:
           path: molecule/default/files/screenshot.png
